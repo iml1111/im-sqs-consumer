@@ -57,7 +57,7 @@ class Consumer(Job):
                         await job_id_model.insert_one(
                             JobIdSchema(
                                 queue_name=queue_name,
-                                job_name=task['job'],
+                                job_name=task['job']['name'],
                                 job_id=task['job_id']
                             )
                         )
@@ -83,3 +83,28 @@ class Consumer(Job):
                 logger.error(traceback.format_exc())
             finally:
                 task_queue.confirm(message['ReceiptHandle'])
+
+
+class ProducerSample(Job):
+
+    async def run(self, queue_name: str, task_num: int = 1):
+        task_num, converted = convert_param(task_num, int)
+        task_queue = TaskQueue(
+            queue_name,
+            self.settings.sqs_access_key_id,
+            self.settings.sqs_secret_access_key,
+            self.settings.sqs_region_name,
+        )
+
+        for i in range(task_num):
+            task_queue.push_task(
+                MessageV1(
+                    job={
+                        'name': "HelloWorld",
+                        'param': {
+                            'name': 'Tony'
+                        }
+                    }
+                )
+            )
+            logger.info(f"Pushed task {i}!")

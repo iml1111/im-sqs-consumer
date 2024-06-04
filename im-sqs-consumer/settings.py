@@ -14,7 +14,7 @@ class Settings(BaseSettings):
 
     # Basic settings
     app_name: str = Field(APP_NAME, env="APP_NAME")
-    description: str = "IMJob is Boilerplate for Scalable Python Job Workers."
+    description: str = "IMSQS Consumer"
     contact_name: str = __AUTHOR__
     contact_url: str = "https://github.com/iml1111"
     contact_email: str = "shin10256@gmail.com"

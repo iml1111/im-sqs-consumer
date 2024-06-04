@@ -5,7 +5,7 @@ from settings import Settings
 
 class Job(metaclass=ABCMeta):
 
-    def __init__(self, settings: Settings):
+    def __init__(self, settings: Settings, **kwargs):
         self.settings = settings
 
     @abstractmethod
