@@ -13,3 +13,7 @@ rich
 shellingham
 typer
 typing_extensions
+boto3
+motor
+orjson
+pytz
