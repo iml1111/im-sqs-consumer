@@ -15,8 +15,6 @@ from model.mongodb.collection.job_id import JobId, JobIdSchema
 class Consumer(Job):
 
     async def run(self, queue_name: str, timeout: Optional[int] = None):
-        mongodb_cli = get_client(self.settings.mongodb_uri)
-        mongodb_db = mongodb_cli[self.settings.mongodb_db_name]
         timeout, converted = convert_param(timeout, int)
         timer = Timer(enabled=timeout is not None)
         wait_secs = 20
@@ -28,7 +26,10 @@ class Consumer(Job):
             self.settings.sqs_region_name,
         )
         modules: ConsumerModules = get_consumer_modules(queue_name, self.settings)
-        job_id_model = JobId(mongodb_db)
+
+        job_id_model = None
+        if modules.idempotent:
+            job_id_model = JobId(modules.mongodb_conn.db)
 
         while (
             (converted and timer.elapsed < timeout)

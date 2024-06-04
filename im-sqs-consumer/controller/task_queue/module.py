@@ -7,6 +7,7 @@ from settings import Settings
 
 
 class ConsumerModules(BaseModel):
+    mongodb_conn: Optional[MongoDBConnection] = None
     task_queue: Optional[TaskQueue] = None
     idempotent: bool
 
@@ -34,6 +35,10 @@ def _get_task_queue(queue_name: str, settings: Settings) -> TaskQueue:
 
 def get_consumer_modules(queue_name: str, settings: Settings) -> ConsumerModules:
     return ConsumerModules(
+        mongodb_conn=_get_nepto_mongodb_connection(
+            settings.mongodb_uri,
+            settings.mongodb_db_name,
+        ),
         task_queue=_get_task_queue(queue_name, settings),
         idempotent=True,
     )
