@@ -4,9 +4,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 __AUTHOR__ = "IML"
-__VERSION__ = "0.4.2"
+__VERSION__ = "0.1.1"
 
-APP_NAME = "IMJob"
+APP_NAME = "IMSQSConsumer"
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 
