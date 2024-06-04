@@ -14,3 +14,14 @@ class Job(metaclass=ABCMeta):
 
     def execute(self, *args, **kwargs):
         return asyncio.run(self.run(*args, **kwargs))
+
+
+# Jobs
+from job.hello import HelloWorld, SlowWork, BadWork
+
+
+JOB_ROUTER = {
+    "HelloWorld": HelloWorld,
+    "SlowWork": SlowWork,
+    "BadWork": BadWork
+}

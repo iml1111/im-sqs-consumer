@@ -19,6 +19,13 @@ class Settings(BaseSettings):
     contact_url: str = "https://github.com/iml1111"
     contact_email: str = "shin10256@gmail.com"
 
+    mongodb_uri: str
+    mongodb_db_name: str
+
+    sqs_access_key_id: str
+    sqs_secret_access_key: str
+    sqs_region_name: str
+
     model_config = SettingsConfigDict(
         env_file=BASE_DIR + '/.env',
         env_file_encoding='utf-8'
