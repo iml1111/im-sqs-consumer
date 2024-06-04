@@ -8,7 +8,6 @@ from controller.job.util import convert_param, Timer
 from controller.task_queue.queue import TaskQueue
 from controller.task_queue.module import get_consumer_modules, ConsumerModules
 from model.appmodel.message import MessageV1
-from model.mongodb import get_client
 from model.mongodb.collection.job_id import JobId, JobIdSchema
 
 
