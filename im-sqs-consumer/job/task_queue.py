@@ -8,7 +8,6 @@ from controller.job.util import convert_param, Timer
 from controller.task_queue.queue import TaskQueue
 from controller.task_queue.module import get_consumer_modules, ConsumerModules
 from model.appmodel.message import MessageV1
-from model.mongodb.collection.job_id import JobId, JobIdSchema
 
 
 class Consumer(Job):
@@ -25,10 +24,6 @@ class Consumer(Job):
             self.settings.sqs_region_name,
         )
         modules: ConsumerModules = get_consumer_modules(queue_name, self.settings)
-
-        job_id_model = None
-        if modules.idempotent:
-            job_id_model = JobId(modules.mongodb_conn.db)
 
         while (
             (converted and timer.elapsed < timeout)
@@ -49,22 +44,6 @@ class Consumer(Job):
 
             task = message['Body']
             logger.info(f"Received Task: {task}")
-
-            # Check Idempotent
-            if modules.idempotent:
-                try:
-                    if task['job_id']:
-                        await job_id_model.insert_one(
-                            JobIdSchema(
-                                queue_name=queue_name,
-                                job_name=task['job']['name'],
-                                job_id=task['job_id']
-                            )
-                        )
-                except DuplicateKeyError:
-                    logger.warning(f"Duplicate Task[{task['job']['name']}]: {task['job_id']}")
-                    task_queue.confirm(message['ReceiptHandle'])
-                    continue
 
             try:
                 # Message V1 Validation & Parsing

@@ -9,7 +9,6 @@ from settings import Settings
 class ConsumerModules(BaseModel):
     mongodb_conn: Optional[MongoDBConnection] = None
     task_queue: Optional[TaskQueue] = None
-    idempotent: bool
 
     class Config:
         arbitrary_types_allowed = True
@@ -40,12 +39,9 @@ def get_consumer_modules(queue_name: str, settings: Settings) -> ConsumerModules
             settings.mongodb_db_name,
         ),
         task_queue=_get_task_queue(queue_name, settings),
-        idempotent=True,
     )
 
 
 def get_all_consumer_modules(settings: Settings) -> ConsumerModules:
     """Get all consumer modules for Test"""
-    return ConsumerModules(
-        idempotent=True,
-    )
+    return ConsumerModules()
